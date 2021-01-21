@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @Log
+@SessionScope
 public class OngoingGameService {
 
     private GameOptions gameOptions;
