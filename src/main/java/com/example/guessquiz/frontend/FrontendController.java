@@ -56,7 +56,19 @@ public class FrontendController {
         if (hasNextQuestion) {
             return "redirect:game";
         } else {
-            return "redirect:";
+            return "redirect:summary";
         }
     }
+
+    @GetMapping("/summary")
+    public String summary(Model model){
+        model.addAttribute("difficulty", ongoingGameService.getDifficulty());
+        model.addAttribute("categoryName", ongoingGameService.getCategotyName());
+        model.addAttribute("points", ongoingGameService.getPoints());
+        model.addAttribute("maxPoints", ongoingGameService.getTotalQuestionNumber());
+        return "summary";
+    }
+
+
+
 }

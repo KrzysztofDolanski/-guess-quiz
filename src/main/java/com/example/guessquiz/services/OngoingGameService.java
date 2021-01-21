@@ -1,7 +1,10 @@
 package com.example.guessquiz.services;
 
+import com.example.guessquiz.dto.CategoriesDto;
 import com.example.guessquiz.dto.QuestionsDto;
+import com.example.guessquiz.frontend.Difficulty;
 import com.example.guessquiz.frontend.GameOptions;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log
@@ -16,7 +20,10 @@ public class OngoingGameService {
 
     private GameOptions gameOptions;
     private int currentQuestionIndex;
+    @Getter
     private int points;
+
+
 
     private List<QuestionsDto.QuestionDto> questions;
 
@@ -28,7 +35,7 @@ public class OngoingGameService {
         this.currentQuestionIndex = 0;
         this.points = 0;
 
-        quizDataService.getQuizQuestions(gameOptions);
+        this.questions = quizDataService.getQuizQuestions(gameOptions);
     }
 
     public int getCurrentQuestionNumber() {
@@ -67,5 +74,17 @@ public class OngoingGameService {
     public boolean proceedToNextQuestion() {
         currentQuestionIndex++;
         return currentQuestionIndex < questions.size();
+    }
+
+    public Difficulty getDifficulty(){
+        return gameOptions.getDifficulty();
+    }
+
+    public String getCategotyName(){
+        Optional<String> any = quizDataService.getQuizCategories().stream()
+                .filter(categoryDto -> categoryDto.getId() == gameOptions.getCategoryId())
+                .map(CategoriesDto.CategoryDto::getName)
+                .findAny();
+        return any.orElse(null);
     }
 }
