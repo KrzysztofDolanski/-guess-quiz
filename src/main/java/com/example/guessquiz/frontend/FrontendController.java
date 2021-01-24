@@ -2,6 +2,7 @@ package com.example.guessquiz.frontend;
 
 import com.example.guessquiz.services.OngoingGameService;
 import com.example.guessquiz.services.QuizDataService;
+import com.sun.jdi.connect.spi.ClosedConnectionException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class FrontendController {
     }
 
     @PostMapping("/select")
-    public String postSelectForm(Model model, @ModelAttribute GameOptions gameOptions) {
+    public String postSelectForm(Model model, @ModelAttribute GameOptions gameOptions) throws ClosedConnectionException {
         ongoingGameService.init(gameOptions);
         log.info("Form submitted with data: " + gameOptions);
         return "redirect:game";

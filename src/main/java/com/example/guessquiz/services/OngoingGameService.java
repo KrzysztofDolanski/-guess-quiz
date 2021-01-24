@@ -4,6 +4,7 @@ import com.example.guessquiz.dto.CategoriesDto;
 import com.example.guessquiz.dto.QuestionsDto;
 import com.example.guessquiz.frontend.Difficulty;
 import com.example.guessquiz.frontend.GameOptions;
+import com.sun.jdi.connect.spi.ClosedConnectionException;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class OngoingGameService {
     @Autowired
     private QuizDataService quizDataService;
 
-    public void init(GameOptions gameOptions){
+    public void init(GameOptions gameOptions) throws ClosedConnectionException {
         this.gameOptions = gameOptions;
         this.currentQuestionIndex = 0;
         this.points = 0;

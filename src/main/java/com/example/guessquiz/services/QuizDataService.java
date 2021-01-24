@@ -5,6 +5,7 @@ import com.example.guessquiz.dto.CategoryQuestionCountInfoDto;
 import com.example.guessquiz.dto.QuestionsDto;
 import com.example.guessquiz.frontend.Difficulty;
 import com.example.guessquiz.frontend.GameOptions;
+import com.sun.jdi.connect.spi.ClosedConnectionException;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class QuizDataService {
         return result.getCategories();
     }
 
-    public List<QuestionsDto.QuestionDto> getQuizQuestions(GameOptions gameOptions) {
+    public List<QuestionsDto.QuestionDto> getQuizQuestions(GameOptions gameOptions) throws ClosedConnectionException {
         CategoryQuestionCountInfoDto categoryQuestionCount = getCategoryQuestionCount(gameOptions.getCategoryId());
         int availableQuestionCount = categoryQuestionCount.getQuestionCountForDifficulty(gameOptions.getDifficulty());
         if (availableQuestionCount >= gameOptions.getNumberOfQuestions()) {
@@ -60,14 +61,19 @@ public class QuizDataService {
         return result.getResults();
     }
 
-    private CategoryQuestionCountInfoDto getCategoryQuestionCount(int categoryId) {
+    private CategoryQuestionCountInfoDto getCategoryQuestionCount(int categoryId) throws ClosedConnectionException {
         RestTemplate restTemplate = new RestTemplate();
 
         URI uri = UriComponentsBuilder.fromHttpUrl("https://opentdb.com/api_count.php")
                 .queryParam("category", categoryId)
                 .build().toUri();
+
         log.info("Quiz category question count retrieve URL: " + uri);
         CategoryQuestionCountInfoDto result = restTemplate.getForObject(uri, CategoryQuestionCountInfoDto.class);
+        if (result==null){
+        throw new ClosedConnectionException();
+        }
+
         log.info("Quiz category question count content: " + result);
         return result;
     }
